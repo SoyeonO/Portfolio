@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Soyeon Oh — Digital Specialist for Korea Market</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+  :root{
+    --bg:#0E0F0D;
+    --bg-soft:#151713;
+    --bg-card:#1B1D18;
+    --text-primary:#F4F2EA;
+    --text-secondary:#A7A79B;
+    --text-muted:#737469;
+    --accent:#B7FF5A;
+    --accent-soft:rgba(183,255,90,.12);
+    --border:rgba(244,242,234,.12);
+    --border-strong:rgba(244,242,234,.24);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--text-primary);
+    font-family:"Pretendard",ui-sans-serif,system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    font-feature-settings:"ss01","ss03","case";
+  }
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  ::selection{background:var(--accent);color:#0E0F0D}
+
+  /* layout */
+  .wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+  section{position:relative}
+  .sec-pad{padding:140px 0}
+
+  /* type */
+  .label{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .meta-sm{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+  .display{font-weight:800;font-size:clamp(40px,5.4vw,72px);line-height:1.02;letter-spacing:-.045em;text-wrap:balance;color:var(--text-primary)}
+  .body{font-size:16px;line-height:1.75;color:var(--text-secondary);font-weight:400}
+
+  /* progress bar */
+  .progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0);z-index:200;will-change:transform;opacity:.7}
+
+  /* nav */
+  header.nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(14px);background:rgba(14,15,13,0);border-bottom:1px solid transparent;transition:background .3s, border-color .3s}
+  header.nav.scrolled{background:rgba(14,15,13,.72);border-color:var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;max-width:1280px;margin:0 auto;height:72px}
+  .logo{font-weight:700;font-size:15px;letter-spacing:-.01em;display:inline-flex;align-items:center;gap:10px}
+  .logo .dot{width:7px;height:7px;background:var(--accent);border-radius:50%}
+  .nav-links{display:flex;gap:32px;align-items:center}
+  .nav-links a{font-size:14px;letter-spacing:-.005em;color:var(--text-secondary);transition:color .2s;font-weight:500;position:relative;padding:6px 0}
+  .nav-links a:hover{color:var(--text-primary)}
+  .nav-links .nav-cta{padding:10px 18px;border:1px solid var(--border-strong);border-radius:999px;font-size:13px;color:var(--text-primary);transition:all .25s}
+  .nav-links .nav-cta:hover{background:var(--accent);color:#0E0F0D;border-color:var(--accent)}
+  .nav-toggle{display:none;width:40px;height:40px;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:999px}
+  .nav-toggle span{width:14px;height:1px;background:var(--text-primary);position:relative}
+  .nav-toggle span::before,.nav-toggle span::after{content:"";position:absolute;left:0;width:14px;height:1px;background:var(--text-primary)}
+  .nav-toggle span::before{top:-4px}
+  .nav-toggle span::after{top:4px}
+
+  /* mobile sheet */
+  .nav-sheet{position:fixed;inset:0;background:var(--bg);z-index:90;display:none;flex-direction:column;padding:100px 32px 48px;gap:8px}
+  .nav-sheet.open{display:flex}
+  .nav-sheet a{font-size:32px;font-weight:700;letter-spacing:-.02em;padding:18px 0;border-bottom:1px solid var(--border)}
+  .nav-sheet .sheet-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;color:var(--text-secondary);font-size:14px}
+
+  /* hero */
+  .hero{min-height:92vh;padding:128px 0 96px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.25fr 0.9fr;gap:64px;align-items:start}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:28px}
+  .hero-eyebrow::before{content:"";width:28px;height:1px;background:var(--accent)}
+  .hero-headline{font-weight:800;font-size:clamp(46px,6.2vw,92px);line-height:.98;letter-spacing:-.045em;max-width:920px;color:var(--text-primary);text-wrap:balance}
+  .hero-headline .word{display:inline-block;opacity:0;transform:translateY(28px);margin-right:.22em}
+  .hero-headline em{font-style:normal;color:var(--accent);font-weight:800;position:relative;display:inline-block}
+  .hero-sub{margin-top:32px;font-size:clamp(17px,1.35vw,22px);font-weight:400;color:var(--text-secondary);line-height:1.5;max-width:680px;letter-spacing:-.005em;opacity:0;transform:translateY(20px)}
+  .hero-proof{margin-top:28px;display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--text-muted);line-height:1.55;max-width:640px;opacity:0;transform:translateY(20px)}
+  .hero-proof .pm{color:var(--accent);font-size:12px;line-height:1.7;flex:0 0 auto}
+  .ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:40px;opacity:0;transform:translateY(20px)}
+  .btn{display:inline-flex;align-items:center;gap:12px;padding:16px 24px;font-size:14px;font-weight:600;border-radius:999px;border:1px solid var(--border-strong);transition:all .25s ease;letter-spacing:-.005em;cursor:pointer}
+  .btn .arr{transition:transform .3s ease;display:inline-flex}
+  .btn:hover .arr{transform:translate(3px,-1px)}
+  .btn.primary{background:var(--accent);color:#0E0F0D;border-color:var(--accent)}
+  .btn.primary:hover{background:#cfff7e;border-color:#cfff7e}
+  .btn.ghost{color:var(--text-primary)}
+  .btn.ghost:hover{border-color:var(--text-primary);background:rgba(244,242,234,.04)}
+
+  /* stack card */
+  .stack-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:6px;position:relative;opacity:0;transform:translateY(24px)}
+  .stack-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--border)}
+  .stack-head .label{color:var(--accent)}
+  .stack-head .meta-sm{color:var(--text-muted)}
+  .stack-rows{display:flex;flex-direction:column}
+  .stack-row{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--border);transition:background .25s, padding .25s}
+  .stack-row:last-child{border-bottom:0}
+  .stack-row:hover{background:var(--accent-soft);padding-left:8px;padding-right:8px;border-radius:10px;margin:0 -8px;border-bottom-color:transparent}
+  .stack-row:hover + .stack-row{border-top:1px solid var(--border)}
+  .stack-idx{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--text-muted);font-variant-numeric:tabular-nums;font-family:"JetBrains Mono",ui-monospace,monospace}
+  .stack-body h4{font-size:17px;font-weight:700;letter-spacing:-.018em;color:var(--text-primary);margin-bottom:4px}
+  .stack-body p{font-size:13px;color:var(--text-secondary);line-height:1.5}
+  .stack-body .arr-mute{color:var(--accent);font-weight:600;margin:0 2px}
+  .stack-body .sep{color:var(--text-muted);margin:0 4px}
+  .stack-dot{width:6px;height:6px;border-radius:50%;background:var(--border-strong);transition:background .25s}
+  .stack-row:hover .stack-dot{background:var(--accent)}
+  .stack-foot{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12px;letter-spacing:.02em;color:var(--text-muted);padding-top:18px;align-items:center;border-top:1px solid var(--border);margin-top:6px}
+  .stack-foot .sep-dot{color:rgba(244,242,234,.18)}
+
+  /* sec head */
+  .sec-head{display:grid;grid-template-columns:240px 1fr;gap:48px;margin-bottom:64px;align-items:end}
+  .sec-head .meta-col{display:flex;flex-direction:column;gap:14px}
+  .sec-head .meta-col .desc{font-size:14px;color:var(--text-secondary);line-height:1.6;max-width:220px}
+  .sec-head h2{opacity:0;transform:translateY(28px)}
+
+  /* metrics */
+  .metrics{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+  .metric{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:36px 32px;display:flex;flex-direction:column;justify-content:space-between;min-height:240px;position:relative;transition:transform .3s ease, border-color .3s ease;opacity:0;transform:translateY(28px)}
+  .metric:hover{transform:translateY(-4px);border-color:var(--border-strong)}
+  .metric .m-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px}
+  .metric .m-label::before{content:"";width:6px;height:6px;background:var(--accent);border-radius:50%}
+  .metric .m-num{font-weight:800;font-size:clamp(40px,4.4vw,64px);line-height:1;letter-spacing:-.035em;color:var(--text-primary);margin:auto 0 8px;font-variant-numeric:tabular-nums}
+  .metric .m-num .unit{font-size:.42em;font-weight:700;color:var(--text-secondary);margin-left:8px;letter-spacing:0}
+  .metric .m-desc{font-size:14px;color:var(--text-secondary);line-height:1.55;max-width:340px}
+  .m-1{grid-column:span 7;background:linear-gradient(180deg,var(--bg-card) 0%, var(--bg-soft) 100%);min-height:300px}
+  .m-1 .m-num{font-size:clamp(56px,6vw,96px)}
+  .m-2{grid-column:span 5}
+  .m-3{grid-column:span 4}
+  .m-4{grid-column:span 4}
+  .m-5{grid-column:span 4;background:transparent;border-style:dashed}
+  .m-5 .m-num{color:var(--text-secondary)}
+
+  /* services */
+  .services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .service{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:36px 32px;display:flex;flex-direction:column;gap:22px;transition:transform .3s ease, border-color .3s ease;opacity:0;transform:translateY(32px)}
+  .service:hover{transform:translateY(-4px);border-color:var(--border-strong)}
+  .service .s-num{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--accent);font-family:ui-monospace,monospace}
+  .service h3{font-size:clamp(22px,1.8vw,28px);font-weight:750;line-height:1.15;letter-spacing:-.025em;color:var(--text-primary)}
+  .service .s-sub{font-size:15px;color:var(--text-secondary);line-height:1.5}
+  .service .s-desc{font-size:14px;color:var(--text-muted);line-height:1.65}
+  .service .s-divider{height:1px;background:var(--border);margin:4px 0}
+  .service .s-list{display:flex;flex-direction:column;gap:8px}
+  .service .s-list-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+  .service .s-list li{list-style:none;font-size:13.5px;color:var(--text-secondary);line-height:1.5;padding-left:16px;position:relative}
+  .service .s-list li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:1px;background:var(--accent)}
+  .service .s-best{margin-top:auto;padding-top:18px;border-top:1px solid var(--border)}
+  .service .s-best .s-list-title{margin-bottom:8px}
+  .service .s-best p{font-size:13.5px;color:var(--text-secondary);line-height:1.55}
+
+  /* work */
+  .work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .work-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:20px;transition:transform .3s ease, border-color .3s ease;opacity:0;transform:translateY(32px);position:relative}
+  .work-card:hover{transform:translateY(-4px);border-color:var(--border-strong)}
+  .work-card .w-tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);align-self:flex-start;padding:6px 12px;border:1px solid var(--accent-soft);border-radius:999px;background:var(--accent-soft)}
+  .work-card .w-title{font-size:clamp(20px,1.6vw,24px);font-weight:750;line-height:1.25;letter-spacing:-.02em;color:var(--text-primary)}
+  .work-card .w-desc{font-size:14px;color:var(--text-secondary);line-height:1.6}
+  .work-card .w-result{display:flex;flex-direction:column;gap:8px;padding:16px 18px;border:1px dashed var(--border);border-radius:12px;background:rgba(183,255,90,.03)}
+  .work-card .w-result-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+  .work-card .w-result-val{font-size:14px;color:var(--text-primary);font-weight:600;letter-spacing:-.01em;line-height:1.5}
+  .work-card .w-cta{margin-top:auto;padding-top:8px;display:inline-flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;color:var(--text-primary);cursor:pointer;letter-spacing:-.005em}
+  .work-card .w-cta .arr{transition:transform .25s;color:var(--accent);font-size:14px}
+  .work-card .w-cta:hover .arr{transform:translate(3px,-1px)}
+  .work-card .w-cta .lbl-open{display:none}
+  .work-card.is-open .w-cta .lbl-closed{display:none}
+  .work-card.is-open .w-cta .lbl-open{display:inline}
+  .work-card.is-open{border-color:var(--accent-soft);grid-column:span 2}
+  .work-card.is-open .w-cta .arr{transform:rotate(180deg)}
+
+  /* case detail panel */
+  .w-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s ease}
+  .work-card.is-open .w-detail{grid-template-rows:1fr;margin-top:8px}
+  .w-detail-inner{overflow:hidden}
+  .w-detail-body{padding-top:24px;border-top:1px solid var(--border);display:grid;grid-template-columns:240px 1fr 1fr;gap:32px}
+  .d-block .d-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:block}
+  .d-block p{font-size:14px;color:var(--text-secondary);line-height:1.7}
+  .d-block ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin:0}
+  .d-block ul li{font-size:13.5px;color:var(--text-secondary);line-height:1.5;padding-left:14px;position:relative}
+  .d-block ul li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:1px;background:var(--accent)}
+  .d-block.result ul li::before{background:var(--accent);height:6px;width:6px;border-radius:50%;top:6px}
+  .d-block + .d-block{margin-top:24px}
+  .d-overview{display:flex;flex-direction:column;gap:12px}
+  .d-meta-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;color:var(--text-secondary)}
+  .d-meta-grid b{color:var(--text-muted);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.12em;padding-top:3px}
+
+  /* process */
+  .process{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;counter-reset:proc}
+  .proc{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:28px 24px;display:flex;flex-direction:column;gap:14px;min-height:240px;transition:transform .3s ease, border-color .3s ease;opacity:0;transform:translateY(24px);position:relative}
+  .proc:hover{transform:translateY(-4px);border-color:var(--border-strong)}
+  .proc .p-num{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.08em;font-family:ui-monospace,monospace;display:flex;align-items:center;gap:8px}
+  .proc .p-num::before{content:"";width:18px;height:1px;background:var(--accent)}
+  .proc h4{font-size:18px;font-weight:700;letter-spacing:-.02em}
+  .proc p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+
+  /* tools */
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .tool-group{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:28px;opacity:0;transform:translateY(24px)}
+  .tool-group h4{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .tool-group h4::before{content:"";width:6px;height:6px;background:var(--accent);border-radius:50%}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;padding:8px 14px;border:1px solid var(--border);color:var(--text-secondary);border-radius:999px;transition:all .25s;font-weight:500}
+  .chip:hover{border-color:var(--border-strong);color:var(--text-primary);background:rgba(244,242,234,.03)}
+
+  /* contact */
+  .contact-sec{padding:140px 0 100px}
+  .contact-head{margin-bottom:48px}
+  .contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:64px;align-items:start}
+  .contact-copy p{font-size:18px;color:var(--text-secondary);line-height:1.65;max-width:560px;opacity:0;transform:translateY(20px)}
+  .credentials{margin-top:32px;display:flex;flex-direction:column;gap:14px;padding:24px 26px;border:1px solid var(--border);border-radius:18px;background:var(--bg-soft);opacity:0;transform:translateY(20px)}
+  .cred-row{display:grid;grid-template-columns:22px 1fr;gap:14px;align-items:start}
+  .cred-row .cred-mark{color:var(--accent);font-size:13px;line-height:1.7}
+  .cred-row p{font-size:14px;color:var(--text-secondary);line-height:1.6;margin:0!important;max-width:none!important}
+  .contact-cta-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:32px;opacity:0;transform:translateY(20px)}
+  .secondary-link{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--text-secondary);padding:14px 4px;border-bottom:1px solid var(--border-strong);transition:color .25s, border-color .25s}
+  .secondary-link:hover{color:var(--accent);border-color:var(--accent)}
+  .secondary-link .arr{transition:transform .25s}
+  .secondary-link:hover .arr{transform:translate(3px,-3px)}
+
+  .contact-info{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:0;opacity:0;transform:translateY(20px)}
+  .contact-row{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:18px 0;border-bottom:1px solid var(--border);align-items:baseline}
+  .contact-row:first-child{padding-top:0}
+  .contact-row:last-child{padding-bottom:0;border-bottom:0}
+  .contact-row .k{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+  .contact-row .v{font-size:15px;font-weight:500;color:var(--text-primary);letter-spacing:-.01em}
+  .contact-row a:hover{color:var(--accent)}
+
+  /* footer */
+  footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-muted);letter-spacing:-.005em;max-width:1280px;margin:0 auto}
+
+  /* responsive */
+  @media (max-width: 1024px){
+    .wrap{padding:0 28px}
+    .nav-inner{padding:18px 28px}
+    .hero{padding:112px 0 72px}
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .sec-head{grid-template-columns:1fr;gap:20px;align-items:start}
+    .metrics{grid-template-columns:repeat(6,1fr)}
+    .m-1{grid-column:span 6;min-height:240px}
+    .m-2{grid-column:span 6}
+    .m-3,.m-4,.m-5{grid-column:span 2}
+    .services{grid-template-columns:1fr;gap:14px}
+    .work-grid{grid-template-columns:1fr}
+    .work-card.is-open{grid-column:span 1}
+    .process{grid-template-columns:repeat(2,1fr)}
+    .tools-grid{grid-template-columns:1fr}
+    .contact-grid{grid-template-columns:1fr;gap:36px}
+    .w-detail-body{grid-template-columns:1fr;gap:20px}
+    footer{padding:28px}
+  }
+  @media (max-width: 768px){
+    .wrap{padding:0 20px}
+    .sec-pad{padding:96px 0}
+    .nav-inner{padding:14px 20px;height:64px}
+    .nav-links{display:none}
+    .nav-toggle{display:inline-flex}
+    .hero{padding:104px 0 60px;min-height:auto}
+    .hero-headline{font-size:clamp(40px,11.5vw,56px)}
+    .display{font-size:clamp(34px,8vw,44px)}
+    .sec-head{margin-bottom:40px}
+    .metrics{grid-template-columns:1fr}
+    .m-1,.m-2,.m-3,.m-4,.m-5{grid-column:span 1}
+    .metric{min-height:200px;padding:28px 24px}
+    .service,.work-card,.tool-group{padding:24px}
+    .process{grid-template-columns:1fr}
+    .contact-info{padding:24px}
+    .contact-row{grid-template-columns:1fr;gap:6px;padding:14px 0}
+    footer{flex-direction:column;gap:8px;align-items:flex-start;padding:24px 20px}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s!important;transition-duration:.001s!important}
+    html{scroll-behavior:auto}
+    .hero-headline .word,.hero-sub,.hero-proof,.ctas,.stack-card,.metric,.service,.work-card,.proc,.tool-group,.contact-copy p,.credentials,.contact-cta-row,.contact-info,.sec-head h2{opacity:1!important;transform:none!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo"><span class="dot"></span> Soyeon Oh</a>
+    <nav class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#contact" class="nav-cta">Contact</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu"><span></span></button>
+  </div>
+</header>
+
+<div class="nav-sheet" id="navSheet">
+  <a href="#services" data-close>Services</a>
+  <a href="#work" data-close>Work</a>
+  <a href="#contact" data-close>Contact</a>
+  <div class="sheet-foot">
+    <div>Seoul · KST / UTC+9</div>
+    <div>soyeon.oh90@gmail.com</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="top" data-screen-label="01 Hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="hero-eyebrow">Digital Specialist for Korea Market</div>
+        <h1 class="hero-headline" id="heroHeadline">
+          <span class="word">Build</span><span class="word">Korean</span><span class="word">digital</span><span class="word">channels</span><span class="word">that</span><span class="word">actually</span><span class="word"><em>work.</em></span>
+        </h1>
+        <p class="hero-sub" id="heroSub">
+          I help global startups adapt their content, social media, CRM, and customer-facing digital touchpoints for Korean audiences — through <span style="color:var(--text-primary)">Content SEO</span>, <span style="color:var(--text-primary)">Marketing Funnel Design</span>, and <span style="color:var(--text-primary)">Korean Localisation</span>.
+        </p>
+        <div class="ctas" id="heroCtas">
+          <a href="#contact" class="btn primary">Work with me <span class="arr">↗</span></a>
+          <a href="#work" class="btn ghost">View selected work <span class="arr">↓</span></a>
+        </div>
+      </div>
+
+      <aside class="stack-card" id="stackCard" aria-label="Korea Market Digital Stack">
+        <div class="stack-head">
+          <span class="label">Korea Market</span>
+          <span class="meta-sm">Digital Stack</span>
+        </div>
+        <div class="stack-rows">
+          <div class="stack-row">
+            <div class="stack-idx">01</div>
+            <div class="stack-body">
+              <h4>Content SEO</h4>
+            </div>
+            <div class="stack-dot"></div>
+          </div>
+          <div class="stack-row">
+            <div class="stack-idx">02</div>
+            <div class="stack-body">
+              <h4>Funnel Design</h4>
+            </div>
+            <div class="stack-dot"></div>
+          </div>
+          <div class="stack-row">
+            <div class="stack-idx">03</div>
+            <div class="stack-body">
+              <h4>Localisation</h4>
+            </div>
+            <div class="stack-dot"></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="sec-pad" id="metrics" data-screen-label="02 Proof Metrics">
+  <div class="wrap">
+    <div class="metrics">
+      <div class="metric m-1">
+        <div class="m-label">Connect-A · Funnel Design</div>
+        <div class="m-num"><span class="count" data-to="10000" data-fmt="comma">0</span><span class="unit">users</span></div>
+        <p class="m-desc">Acquired in year one with zero paid media — content → CRM → conversion across newsletter, Instagram, YouTube, and KakaoTalk.</p>
+      </div>
+      <div class="metric m-2">
+        <div class="m-label">Connect-A · CRM Commerce</div>
+        <div class="m-num">KRW <span class="count" data-to="200" data-fmt="plain">0</span><span class="unit">M</span></div>
+        <p class="m-desc">Generated in 6 months through a KakaoTalk CRM and e-commerce flow built around content trust.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec-pad" id="services" data-screen-label="03 Services">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="meta-col">
+        <span class="label">Services</span>
+        <p class="desc">Three equal axes — chosen together or separately, scoped to your team.</p>
+      </div>
+      <h2 class="display">Three ways I help global teams grow in Korea.</h2>
+    </div>
+
+    <div class="services">
+      <article class="service">
+        <div class="s-num">S/01</div>
+        <h3>Content SEO for Korea</h3>
+        <p class="s-sub">For teams that need Korean content to be discoverable, useful, and locally relevant.</p>
+        <p class="s-desc">I help teams understand how Korean customers search, compare, and evaluate products — then turn that insight into website, blog, FAQ, and landing page content.</p>
+        <div class="s-divider"></div>
+        <div class="s-list">
+          <div class="s-list-title">Includes</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin:0;padding:0">
+            <li>Korean keyword and search-intent research</li>
+            <li>Google / Naver SERP review</li>
+            <li>Blog, FAQ, and landing page content planning</li>
+            <li>On-page SEO recommendations</li>
+            <li>Korean content roadmap</li>
+          </ul>
+        </div>
+        <div class="s-best">
+          <div class="s-list-title">Best for</div>
+          <p>Global startups preparing Korean landing pages, blogs, product pages, or help content.</p>
+        </div>
+      </article>
+
+      <article class="service">
+        <div class="s-num">S/02</div>
+        <h3>Marketing Funnel Design</h3>
+        <p class="s-sub">For teams that need a practical Korean acquisition and retention flow across social media and CRM.</p>
+        <p class="s-desc">I design customer flows across Instagram, YouTube, newsletter, KakaoTalk, and CRM touchpoints so Korean audiences can move from discovery to trust to conversion.</p>
+        <div class="s-divider"></div>
+        <div class="s-list">
+          <div class="s-list-title">Includes</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin:0;padding:0">
+            <li>Social media channel role design</li>
+            <li>Instagram / YouTube / newsletter / KakaoTalk funnel planning</li>
+            <li>CRM message flow and retention touchpoints</li>
+            <li>Content → trust → purchase funnel design</li>
+            <li>Weekly performance review structure</li>
+          </ul>
+        </div>
+        <div class="s-best">
+          <div class="s-list-title">Best for</div>
+          <p>Startups that have Korean content or social channels but no clear funnel yet.</p>
+        </div>
+      </article>
+
+      <article class="service">
+        <div class="s-num">S/03</div>
+        <h3>Korean Localisation for Content</h3>
+        <p class="s-sub">For teams whose Korean content needs to sound natural, credible, and locally relevant.</p>
+        <p class="s-desc">I review and adapt Korean marketing copy, product content, AI outputs, and campaign messages so they feel right for Korean users.</p>
+        <div class="s-divider"></div>
+        <div class="s-list">
+          <div class="s-list-title">Includes</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin:0;padding:0">
+            <li>Korean marketing copy review</li>
+            <li>Landing page / product page localisation</li>
+            <li>AI output quality review</li>
+            <li>Tone and cultural nuance QA</li>
+            <li>Global campaign message adaptation for Korea</li>
+          </ul>
+        </div>
+        <div class="s-best">
+          <div class="s-list-title">Best for</div>
+          <p>AI, SaaS, consumer tech, education, commerce, and global product teams entering Korea.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="sec-pad" id="work" data-screen-label="04 Selected Work">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="meta-col">
+        <span class="label">Selected work</span>
+        <p class="desc">Four engagements that show how the work translates into outcomes.</p>
+      </div>
+      <h2 class="display">Projects that show how the work<br/>translates into outcomes.</h2>
+    </div>
+
+    <div class="work-grid">
+      <!-- Card 1 -->
+      <article class="work-card" data-case="1">
+        <span class="w-tag">Marketing Funnel Design</span>
+        <h3 class="w-title">Connect-A — Marketing Funnel for a 0-to-1 Media Commerce Platform</h3>
+        <p class="w-desc">Designed a content → trust → purchase funnel across web app, newsletter, Instagram, YouTube, and KakaoTalk CRM for a Korean media commerce platform.</p>
+        <div class="w-result">
+          <span class="w-result-label">Result</span>
+          <span class="w-result-val">10,000 users in year one · KRW 200M revenue in 6 months · 79% newsletter open rate</span>
+        </div>
+        <button class="w-cta" aria-expanded="false">
+          <span><span class="lbl-closed">Read case study</span><span class="lbl-open">Close case</span></span>
+          <span class="arr">↓</span>
+        </button>
+        <div class="w-detail"><div class="w-detail-inner"><div class="w-detail-body">
+          <div class="d-block d-overview">
+            <span class="d-label">Overview</span>
+            <div class="d-meta-grid">
+              <b>Service</b><span>Marketing Funnel Design</span>
+              <b>Role</b><span>Co-Founder &amp; Marketing Lead</span>
+              <b>Period</b><span>Nov 2020 – Sep 2023</span>
+              <b>Tools</b><span>Figma, GTM, Instagram, YouTube, KakaoTalk, Newsletter, Notion</span>
+            </div>
+          </div>
+          <div>
+            <div class="d-block">
+              <span class="d-label">Problem</span>
+              <p>Korean 20s–30s cultural consumers were interested in arts and culture, but discovery, trust-building, and purchase paths were fragmented. The business needed a low-cost funnel that could validate demand, build trust, and convert users without paid media.</p>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What I Did</span>
+              <ul>
+                <li>Validated demand with 50 surveys and 17 user interviews</li>
+                <li>Designed 6 Figma web-app screens around a content → trust → purchase flow</li>
+                <li>Split channel roles: Instagram for acquisition, YouTube for storytelling, KakaoTalk for CRM, newsletter for retention</li>
+                <li>Built weekly content and performance review workflows</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="d-block result">
+              <span class="d-label">Result</span>
+              <ul>
+                <li>10,000 users in year one with zero paid media</li>
+                <li>79% newsletter open rate during beta launch</li>
+                <li>KRW 200M in 6 months through KakaoTalk CRM / e-commerce</li>
+                <li>15% purchase conversion · 30% repeat purchase</li>
+              </ul>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What This Shows</span>
+              <p>The ability to design a practical Korean marketing funnel across content, social, CRM, and web touchpoints — not just run separate channels.</p>
+            </div>
+          </div>
+        </div></div></div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="work-card" data-case="2">
+        <span class="w-tag">Korean Localisation</span>
+        <h3 class="w-title">P&amp;G Korea — Localising Global Campaigns for Korean Digital Channels</h3>
+        <p class="w-desc">Adapted global campaign messages and digital content for Korean channels including Naver, Facebook, influencer seeding, and editorial partnerships.</p>
+        <div class="w-result">
+          <span class="w-result-label">Result</span>
+          <span class="w-result-val">2x new visitors · +150% e-commerce conversion · 2x Korea e-commerce conversion</span>
+        </div>
+        <button class="w-cta" aria-expanded="false">
+          <span><span class="lbl-closed">Read case study</span><span class="lbl-open">Close case</span></span>
+          <span class="arr">↓</span>
+        </button>
+        <div class="w-detail"><div class="w-detail-inner"><div class="w-detail-body">
+          <div class="d-block d-overview">
+            <span class="d-label">Overview</span>
+            <div class="d-meta-grid">
+              <b>Service</b><span>Korean Localisation</span>
+              <b>Role</b><span>Account Executive, Weber Shandwick Korea</span>
+              <b>Period</b><span>Mar 2014 – May 2015</span>
+              <b>Tools</b><span>Naver, Facebook, influencer seeding, Cosmopolitan editorial, English reporting</span>
+            </div>
+          </div>
+          <div>
+            <div class="d-block">
+              <span class="d-label">Problem</span>
+              <p>Global campaign assets needed to work in Korea's digital context, where Naver search behaviour, influencer credibility, editorial partnerships, and cultural nuance shaped customer response.</p>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What I Did</span>
+              <ul>
+                <li>Localised P&amp;G Whisper campaign content across Naver, Facebook, influencer seeding, and Cosmopolitan editorial</li>
+                <li>Reviewed influencer content and local channel execution</li>
+                <li>Reworked #LikeAGirl messaging for Korean cultural context</li>
+                <li>Weekly handovers and quarterly English reports for P&amp;G APAC</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="d-block result">
+              <span class="d-label">Result</span>
+              <ul>
+                <li>Whisper: 2x new visitors</li>
+                <li>Whisper: +150% e-commerce conversion in 5 months</li>
+                <li>#LikeAGirl Korea: 2x e-commerce conversion in 4 months</li>
+                <li>Built a reporting cycle between Korean execution and APAC stakeholders</li>
+              </ul>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What This Shows</span>
+              <p>The ability to adapt global messages into Korean digital channels without losing brand direction or local relevance.</p>
+            </div>
+          </div>
+        </div></div></div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="work-card" data-case="3">
+        <span class="w-tag">Content SEO</span>
+        <h3 class="w-title">KT — Content SEO Workflow for a High-Demand Website Issue</h3>
+        <p class="w-desc">Built a repeatable content SEO workflow and KPI monitoring system during a SIM-hacking crisis to capture high-intent search demand.</p>
+        <div class="w-result">
+          <span class="w-result-label">Result</span>
+          <span class="w-result-val">+20% YoY organic traffic · +81.6% organic clicks · 8 → 40,000+ monthly clicks</span>
+        </div>
+        <button class="w-cta" aria-expanded="false">
+          <span><span class="lbl-closed">Read case study</span><span class="lbl-open">Close case</span></span>
+          <span class="arr">↓</span>
+        </button>
+        <div class="w-detail"><div class="w-detail-inner"><div class="w-detail-body">
+          <div class="d-block d-overview">
+            <span class="d-label">Overview</span>
+            <div class="d-meta-grid">
+              <b>Service</b><span>Content SEO</span>
+              <b>Role</b><span>Marketing Consultant, Ascent Korea</span>
+              <b>Period</b><span>Apr 2025 – Feb 2026</span>
+              <b>Tools</b><span>Google Search Console, Looker, ListeningMind Hubble, BlackKiwi</span>
+            </div>
+          </div>
+          <div>
+            <div class="d-block">
+              <span class="d-label">Problem</span>
+              <p>During a SIM-hacking crisis, high-intent branded search demand spiked, but the official website was not capturing enough of that demand.</p>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What I Did</span>
+              <ul>
+                <li>Prioritised urgent issue pages and long-term product pages separately</li>
+                <li>Created SEO checklists for operating content such as notices and press releases</li>
+                <li>Built Looker-based KPI monitoring</li>
+                <li>Helped the internal team repeat the workflow</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="d-block result">
+              <span class="d-label">Result</span>
+              <ul>
+                <li>Organic traffic +20% YoY</li>
+                <li>Organic clicks +81.6%</li>
+                <li>One service page: 8 → 40,000+ monthly clicks</li>
+                <li>Workflow repeatable by KT's internal team</li>
+              </ul>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What This Shows</span>
+              <p>The ability to turn Korean search behaviour into practical website content operations and measurable traffic outcomes.</p>
+            </div>
+          </div>
+        </div></div></div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="work-card" data-case="4">
+        <span class="w-tag">Korean Localisation QA</span>
+        <h3 class="w-title">Outlier AI — Korean Localisation QA for AI Content</h3>
+        <p class="w-desc">Reviewed Korean AI prompts and outputs for tone, naturalness, cultural context, and recurring localisation issues for a US-based AI team.</p>
+        <div class="w-result">
+          <span class="w-result-label">Result</span>
+          <span class="w-result-val">500+ Korean AI outputs reviewed · 3 review cycles · Korean QA protocol update contribution</span>
+        </div>
+        <button class="w-cta" aria-expanded="false">
+          <span><span class="lbl-closed">Read case study</span><span class="lbl-open">Close case</span></span>
+          <span class="arr">↓</span>
+        </button>
+        <div class="w-detail"><div class="w-detail-inner"><div class="w-detail-body">
+          <div class="d-block d-overview">
+            <span class="d-label">Overview</span>
+            <div class="d-meta-grid">
+              <b>Service</b><span>Korean Localisation for Content</span>
+              <b>Role</b><span>Korean Language AI Specialist</span>
+              <b>Period</b><span>Oct 2023 – Mar 2025</span>
+              <b>Tools</b><span>Outlier AI platform, Korean QA reports</span>
+            </div>
+          </div>
+          <div>
+            <div class="d-block">
+              <span class="d-label">Problem</span>
+              <p>Korean AI outputs can be grammatically correct but still sound unnatural, inconsistent, or culturally off.</p>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What I Did</span>
+              <ul>
+                <li>Reviewed 500+ Korean AI prompts and outputs</li>
+                <li>Tagged recurring issues by tone, translation-like phrasing, and missing cultural context</li>
+                <li>Shared structured QA notes with a US-based team across 3 review cycles</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="d-block result">
+              <span class="d-label">Result</span>
+              <ul>
+                <li>Contributed to a Korean QA protocol update</li>
+                <li>Improved how Korean output quality issues were identified and reviewed</li>
+              </ul>
+            </div>
+            <div class="d-block">
+              <span class="d-label">What This Shows</span>
+              <p>The ability to evaluate Korean content quality from both a language and a user-experience perspective.</p>
+            </div>
+          </div>
+        </div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec-pad" id="process" data-screen-label="05 Process">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="meta-col">
+        <span class="label">Process</span>
+        <p class="desc">A simple way to turn market context into action your team can run.</p>
+      </div>
+      <h2 class="display">A simple way to turn market context<br/>into action.</h2>
+    </div>
+
+    <div class="process">
+      <div class="proc"><div class="p-num">01</div><h4>Audit</h4><p>Review Korean website, content, social channels, CRM touchpoints, and customer-facing messages.</p></div>
+      <div class="proc"><div class="p-num">02</div><h4>Find the gap</h4><p>Identify where Korean users may be dropping off — search, content, tone, trust, channel fit, or conversion.</p></div>
+      <div class="proc"><div class="p-num">03</div><h4>Build the plan</h4><p>Create practical content, funnel, localisation, or reporting recommendations your team can use.</p></div>
+      <div class="proc"><div class="p-num">04</div><h4>Support execution</h4><p>Help with content planning, Korean copy review, CRM flow design, channel setup, or reporting templates.</p></div>
+      <div class="proc"><div class="p-num">05</div><h4>Measure &amp; improve</h4><p>Use simple metrics and review loops to see what is working and what needs to change.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-sec" id="contact" data-screen-label="07 Contact">
+  <div class="wrap">
+    <div class="sec-head contact-head">
+      <div class="meta-col">
+        <span class="label">Contact</span>
+        <p class="desc">Project-based or part-time engagements for global startups and remote teams.</p>
+      </div>
+      <h2 class="display">Let&rsquo;s make your Korean digital presence work better.</h2>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-copy">
+        <p>Need support with Korean content, social/CRM funnels, or localisation? I work with global startups and remote teams on project-based or part-time freelance engagements.</p>
+        <div class="credentials">
+          <div class="cred-row"><span class="cred-mark">◇</span><p>8+ years across global campaigns, Korean digital channels, CRM funnels, and localisation QA.</p></div>
+          <div class="cred-row"><span class="cred-mark">◇</span><p>Based in Seoul · KST / UTC+9 · Korean native · English fluent · Mandarin conversational.</p></div>
+        </div>
+        <div class="contact-cta-row">
+          <a href="mailto:soyeon.oh90@gmail.com" class="btn primary" aria-label="Email Soyeon Oh">Email me <span class="arr">↗</span></a>
+          <a href="#" class="secondary-link">View LinkedIn <span class="arr">↗</span></a>
+        </div>
+      </div>
+
+      <div class="contact-info">
+        <div class="contact-row">
+          <div class="k">Email</div>
+          <div class="v"><a href="mailto:soyeon.oh90@gmail.com">soyeon.oh90@gmail.com</a></div>
+        </div>
+        <div class="contact-row">
+          <div class="k">LinkedIn</div>
+          <div class="v"><a href="#">linkedin.com/in/soyeon-oh</a></div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Location</div>
+          <div class="v">Seoul, South Korea · KST / UTC+9</div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Work style</div>
+          <div class="v">Remote · project-based · async-friendly</div>
+        </div>
+        <div class="contact-row">
+          <div class="k">Languages</div>
+          <div class="v">Korean native · English fluent · Mandarin conversational</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 Soyeon Oh — Digital Specialist for Korea Market.</div>
+  <div>Built in Seoul · Available globally.</div>
+</footer>
+
+<script>
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // nav scrolled + progress
+  const nav = document.getElementById('nav');
+  const progress = document.getElementById('progress');
+  function onScroll(){
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.transform = 'scaleX(' + (h > 0 ? window.scrollY/h : 0) + ')';
+  }
+  document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // mobile menu
+  const toggle = document.getElementById('navToggle');
+  const sheet = document.getElementById('navSheet');
+  toggle.addEventListener('click', () => sheet.classList.toggle('open'));
+  sheet.querySelectorAll('[data-close]').forEach(a => a.addEventListener('click', () => sheet.classList.remove('open')));
+
+  // case toggle
+  document.querySelectorAll('.work-card').forEach(card => {
+    const btn = card.querySelector('.w-cta');
+    btn.addEventListener('click', () => {
+      const open = card.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  // GSAP
+  if (window.gsap && !reduced) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // hero
+    gsap.to('.hero-headline .word', {opacity:1, y:0, duration:1.1, stagger:0.08, ease:'power3.out', delay:0.1});
+    gsap.to('#heroSub', {opacity:1, y:0, duration:0.9, delay:0.6, ease:'power3.out'});
+    gsap.to('#heroProof', {opacity:1, y:0, duration:0.8, delay:0.75, ease:'power3.out'});
+    gsap.to('#heroCtas', {opacity:1, y:0, duration:0.8, delay:0.9, ease:'power3.out'});
+    gsap.to('#stackCard', {opacity:1, y:0, duration:0.9, delay:0.35, ease:'power3.out'});
+
+    // section headings
+    gsap.utils.toArray('.sec-head h2').forEach(h => {
+      gsap.to(h, {opacity:1, y:0, duration:0.9, ease:'power3.out',
+        scrollTrigger:{trigger:h, start:'top 85%'}});
+    });
+
+    // metric cards
+    gsap.utils.toArray('.metric').forEach((el,i) => {
+      gsap.to(el, {opacity:1, y:0, duration:0.8, delay:i*0.06, ease:'power3.out',
+        scrollTrigger:{trigger:el.closest('.metrics'), start:'top 80%'}});
+    });
+
+    // service cards
+    gsap.utils.toArray('.service').forEach((el,i) => {
+      gsap.to(el, {opacity:1, y:0, duration:0.85, delay:i*0.08, ease:'power3.out',
+        scrollTrigger:{trigger:el.closest('.services'), start:'top 80%'}});
+    });
+
+    // work cards
+    gsap.utils.toArray('.work-card').forEach((el,i) => {
+      gsap.to(el, {opacity:1, y:0, duration:0.85, delay:i*0.08, ease:'power3.out',
+        scrollTrigger:{trigger:el.closest('.work-grid'), start:'top 80%'}});
+    });
+
+    // process
+    gsap.utils.toArray('.proc').forEach((el,i) => {
+      gsap.to(el, {opacity:1, y:0, duration:0.75, delay:i*0.07, ease:'power3.out',
+        scrollTrigger:{trigger:el.closest('.process'), start:'top 85%'}});
+    });
+
+    // tools
+    gsap.utils.toArray('.tool-group').forEach((el,i) => {
+      gsap.to(el, {opacity:1, y:0, duration:0.7, delay:i*0.06, ease:'power3.out',
+        scrollTrigger:{trigger:el.closest('.tools-grid'), start:'top 85%'}});
+    });
+
+    // contact reveals
+    gsap.utils.toArray('.contact-copy p, .credentials, .contact-cta-row, .contact-info').forEach((el,i) => {
+      gsap.to(el, {opacity:1, y:0, duration:0.8, delay:i*0.08, ease:'power3.out',
+        scrollTrigger:{trigger:el, start:'top 88%'}});
+    });
+
+    // count-up
+    document.querySelectorAll('.count').forEach(node => {
+      const to = parseFloat(node.dataset.to);
+      const fmt = node.dataset.fmt;
+      const obj = {v:0};
+      ScrollTrigger.create({
+        trigger: node, start:'top 90%', once:true,
+        onEnter(){
+          gsap.to(obj, {v: to, duration: 1.8, ease:'power2.out', onUpdate(){
+            let val = obj.v;
+            if (fmt === 'comma') node.textContent = Math.round(val).toLocaleString();
+            else if (fmt === 'float') node.textContent = val.toFixed(1);
+            else node.textContent = Math.round(val);
+          }});
+        }
+      });
+    });
+  } else {
+    // reduced motion: render final
+    document.querySelectorAll('.count').forEach(node => {
+      const to = parseFloat(node.dataset.to);
+      const fmt = node.dataset.fmt;
+      if (fmt === 'comma') node.textContent = Math.round(to).toLocaleString();
+      else if (fmt === 'float') node.textContent = to.toFixed(1);
+      else node.textContent = Math.round(to);
+    });
+  }
+})();
+</script>
+</body>
+</html>
